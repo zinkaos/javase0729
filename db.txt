@@ -1,0 +1,33 @@
+package test;
+
+public class DB {
+
+	private String NO;
+	private String NAME;
+	private String ART;
+	private String SONG;
+	private String GENRE;
+	
+	public String getNo() {
+		return NO;
+	}
+	public String getName() {
+		return NAME;
+	}
+		public String getArt() {
+			return ART;
+		}
+		public String getSong() {
+			return SONG;
+	}
+		public String getGenre() {
+			return GENRE;
+	}
+	public DB (String NO, String NAME, String ART, String SONG, String GENRE) {
+		this.NO = NO;
+		this.NAME = NAME;
+		this.ART = ART;
+		this.SONG = SONG;
+		this.GENRE = GENRE;
+	}
+}

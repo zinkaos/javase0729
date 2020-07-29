@@ -1,0 +1,79 @@
+package test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import test.DB;
+import java.sql.*;
+
+@Path("/")
+	public class service {
+		public List<DB> getList(){
+			System.out.println("entered getList");
+			List<DB> book = new ArrayList<DB>();
+			
+			Connection conn=null;
+			Statement stmt=null;
+			
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("Jdbc:mysql://localhost:3306/userinfo", "root", "tkdehsdk!0");
+			System.out.println("mysql connection ok.");;
+			
+			stmt = conn.createStatement();
+			ResultSet rs= stmt.executeQuery("select * from db;");
+			System.out.println("mysql query ok.");
+			
+			while(rs.next())
+			{
+				System.out.printf("NO: %s /NAME: %s /ART: %s /SONG: %s /GENRE: %s\n", rs.getString("NO"), rs.getString("NAME"), rs.getString("ART"),rs.getString("SONG"),rs.getString("GENRE"));
+				book.add(new DB(rs.getString("NO"),rs.getString("NAME"),rs.getString("ART"),rs.getString("SONG"),rs.getString("GENRE")));		
+			}
+			System.out.println("mysql record finished.");
+			rs.close();
+
+			}
+			catch(ClassNotFoundException cnfe)
+			{
+				System.out.println("Cannot find proper class. - " + cnfe.getMessage());
+			}
+			catch(SQLException se)
+			{
+				System.out.println(se.getMessage());
+			}
+			finally
+			{
+				try 
+				{
+					stmt.close();
+					conn.close();
+				}
+				catch(Exception ignored)
+				{}			
+			}
+			
+			System.out.println("end getList");
+			return book;
+			}
+		
+		@GET
+		@Path("/get")
+		@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+		public List<DB> getRESTService() {
+			return getList();
+			}
+		@GET
+		@Path("/check")
+		@Produces(MediaType.TEXT_PLAIN)
+		public Response verifyRESTService()  {
+			return Response.status(200).entity("service is running..").build();
+		}
+		
+
+}
